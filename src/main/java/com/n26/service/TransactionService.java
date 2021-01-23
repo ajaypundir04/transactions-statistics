@@ -6,6 +6,6 @@ import com.n26.model.Transaction;
 
 public interface TransactionService {
 	
-	void addTransaction(Transaction tx) throws OlderTransactionException, UnParsableTransactionException;
-	void deleteTransactions();
+	void createTransaction(Transaction tx) throws OlderTransactionException, UnParsableTransactionException;
+	void removeTransactions();
 }

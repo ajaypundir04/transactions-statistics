@@ -20,13 +20,13 @@ public class TransactionController {
     @PostMapping("/transactions")
     public ResponseEntity<Void> create(@RequestBody Transaction tx) throws UnParsableTransactionException,
             OlderTransactionException {
-        transactionService.addTransaction(tx);
+        transactionService.createTransaction(tx);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/transactions")
     public ResponseEntity<Void> remove() {
-        transactionService.deleteTransactions();
+        transactionService.removeTransactions();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

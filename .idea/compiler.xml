@@ -9,11 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="coding-challenge" />
       </profile>
-      <profile name="n26profile" enabled="true">
-        <processorPath useClasspath="false">
-          <entry name="$PROJECT_DIR$/../N26-Coding-Challenge/target/generated-sources/annotations" />
-        </processorPath>
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="coding-challenge" target="1.8" />
