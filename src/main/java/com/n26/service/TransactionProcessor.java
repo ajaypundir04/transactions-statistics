@@ -12,10 +12,10 @@ import static com.n26.utils.TimeUtils.toSeconds;
 
 /**
  * @author Ajay Singh Pundir
- * It manages the calculation of transactions
+ * It processes the calculation of transactions
  */
 @Service
-public class TransactionManager {
+public class TransactionProcessor {
 
     private static final int SIZE = 60;
     private final Object MUTEX = new Object();

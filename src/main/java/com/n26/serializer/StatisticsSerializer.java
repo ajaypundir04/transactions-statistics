@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * @author Ajay Singh Pundir
- * Need for serilaization of @{@link Statistics}
+ * Needed for serilaization of @{@link Statistics}
  */
 public class StatisticsSerializer extends JsonSerializer<Statistics> {
 

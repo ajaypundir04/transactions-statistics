@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 public class StatisticsServiceImpl implements StatisticsService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final TransactionManager transactionManager;
+    private final TransactionProcessor transactionProcessor;
 
     @Autowired
-    public StatisticsServiceImpl(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
+    public StatisticsServiceImpl(TransactionProcessor transactionProcessor) {
+        this.transactionProcessor = transactionProcessor;
     }
 
     /**
@@ -28,6 +28,7 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @param transaction @{@link Transaction} get from the consumer.
      */
     public void register(Transaction transaction) {
+        logger.info("Adding transaction to in-memory store");
         addTransactionToStore(transaction);
     }
 
@@ -38,7 +39,7 @@ public class StatisticsServiceImpl implements StatisticsService {
      */
     public Statistics getStatistics() {
 
-        Statistics[] store = transactionManager.getStore();
+        Statistics[] store = transactionProcessor.getStore();
 
         double max = 0;
         double min = 0;
@@ -76,11 +77,14 @@ public class StatisticsServiceImpl implements StatisticsService {
         return new Statistics(sum, avg, max, min, count);
     }
 
+    /**
+     *  Empty statistics if all the transactions are deleted
+     */
     public void clearStatistics() {
-        transactionManager.clear();
+        transactionProcessor.clear();
     }
 
     private void addTransactionToStore(Transaction t) {
-        transactionManager.addTransaction(t);
+        transactionProcessor.addTransaction(t);
     }
 }

@@ -26,6 +26,8 @@ public class Statistics {
         this.count = count;
     }
 
+    public Statistics(){ }
+
     public double getSum() {
         return sum;
     }

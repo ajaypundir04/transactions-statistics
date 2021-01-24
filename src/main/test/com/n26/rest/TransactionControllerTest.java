@@ -51,6 +51,7 @@ public class TransactionControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
+        Mockito.reset(transactionService);
     }
 
     @Test
