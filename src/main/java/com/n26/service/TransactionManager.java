@@ -10,6 +10,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.n26.utils.TimeUtils.toSeconds;
 
+/**
+ * @author Ajay Singh Pundir
+ * It manages the calculation of transactions
+ */
 @Service
 public class TransactionManager {
 
@@ -19,7 +23,11 @@ public class TransactionManager {
     private final AtomicLong firstIndexSeconds = new AtomicLong(-1);
     private final AtomicLong lastIndexSeconds = new AtomicLong(-1);
 
-
+    /**
+     * Transactions will be added to the store on the basis of the index within a second.
+     *
+     * @param transaction
+     */
     public void addTransaction(Transaction transaction) {
         long transactionSeconds = toSeconds(transaction.getTimestamp());
         synchronized (MUTEX) {
@@ -39,6 +47,11 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Sending the statistics after calculations.
+     *
+     * @return @{@link Statistics} consisting of calculation
+     */
     public Statistics[] getStore() {
         DateTime dt = new DateTime();
         if (dt.isWindowExpired(lastIndexSeconds.get())) {

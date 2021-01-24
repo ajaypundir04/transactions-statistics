@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Ajay Singh Pundir
+ * It will be used to calculate the stats within last 60 seconds.
+ */
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 
@@ -18,16 +22,20 @@ public class StatisticsServiceImpl implements StatisticsService {
         this.transactionManager = transactionManager;
     }
 
-    // Stats will be added to store for considering calculation purpose
-    public void register(Transaction tx) {
-        addTransactionToStore(tx);
+    /**
+     * Transactions will be in-memory persist.
+     *
+     * @param transaction @{@link Transaction} get from the consumer.
+     */
+    public void register(Transaction transaction) {
+        addTransactionToStore(transaction);
     }
 
-    // Add Algorithm here  for stats calculation
-    protected Statistics getStatistics(long now) {
-        return null;
-    }
-
+    /**
+     * Statistics will be calculated within last 60 seconds.
+     *
+     * @return @{@link Statistics} required calculations.
+     */
     public Statistics getStatistics() {
 
         Statistics[] store = transactionManager.getStore();

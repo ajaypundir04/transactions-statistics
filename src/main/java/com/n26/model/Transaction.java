@@ -5,17 +5,21 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * @author Ajay Singh Pundir
+ * Handles tansaction data.
+ */
 public class Transaction {
 
     private double amount;
-    @JsonFormat( pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" )
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime timestamp;
 
     public double getAmount() {
         return amount;
     }
 
-    public void setAmount( double amount ) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -23,21 +27,21 @@ public class Transaction {
         return timestamp;
     }
 
-    public void setTimestamp( LocalDateTime timestamp ) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
     @Override
-    public boolean equals( Object o ) {
-        if ( this == o ) return true;
-        if ( o == null || getClass() != o.getClass() ) return false;
-        Transaction that = ( Transaction ) o;
-        return Double.compare( that.amount, amount ) == 0 && timestamp == that.timestamp;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Double.compare(that.amount, amount) == 0 && timestamp == that.timestamp;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( amount, timestamp );
+        return Objects.hash(amount, timestamp);
     }
 
     @Override
