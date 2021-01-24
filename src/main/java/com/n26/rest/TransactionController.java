@@ -35,9 +35,9 @@ public class TransactionController {
     @ApiOperation(value = "Create transactions")
     @PostMapping("/transactions")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void create(@RequestBody Transaction tx) throws UnParsableTransactionException,
+    public void create(@RequestBody Transaction transaction) throws UnParsableTransactionException,
             OlderTransactionException {
-        transactionService.createTransaction(tx);
+        transactionService.create(transaction);
 
     }
 
@@ -45,11 +45,11 @@ public class TransactionController {
     @DeleteMapping("/transactions")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void remove() {
-        transactionService.removeTransactions();
+        transactionService.delete();
     }
 
     @ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<Void> handleJacksonMappingError(InvalidFormatException ex) {
+    public ResponseEntity<Void> handleJacksonMappingError(InvalidFormatException invalidFormatException) {
         return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
