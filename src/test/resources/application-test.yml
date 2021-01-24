@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: transaction-statistics
+server:
+  port: 8080
+
+
+transactions:
+  expire-limit-in-seconds: 60

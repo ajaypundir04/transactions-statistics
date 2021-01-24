@@ -35,6 +35,7 @@ public class ApplicationTest
         PowerMockito.mockStatic(SpringApplication.class);
         Mockito.when(SpringApplication.run(Application.class, args)).thenReturn(context);
         Mockito.when(context.getEnvironment()).thenReturn(environment);
+        Mockito.when(environment.getProperty(Mockito.any(String.class))).thenReturn("8080").thenReturn("transaction-statistics");
         Application app = new Application();
         assertNotNull("Application can be constructed.", app);
         Application.main(args);
