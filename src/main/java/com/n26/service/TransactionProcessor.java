@@ -1,7 +1,10 @@
 package com.n26.service;
 
+import com.n26.exception.UnParsableTransactionException;
 import com.n26.model.Statistics;
 import com.n26.model.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +20,8 @@ import static com.n26.utils.TimeUtils.toSeconds;
 @Service
 public class TransactionProcessor {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private static final int SIZE = 60;
     private final Object MUTEX = new Object();
     private final Statistics[] store = new Statistics[SIZE];
@@ -25,7 +30,7 @@ public class TransactionProcessor {
 
     /**
      * Transactions will be added to the store on the basis of the index within a second.
-     *
+     * It will throw the @{@link UnParsableTransactionException} if future transaction is added.
      * @param transaction
      */
     public void addTransaction(Transaction transaction) {
@@ -33,13 +38,15 @@ public class TransactionProcessor {
         synchronized (MUTEX) {
             shuffleArray();
             int index = (int) (transactionSeconds - firstIndexSeconds.get());
-            if (index == 60) {
-                index = index - 1;
+            index = index == 60 ? index - 1 : index;
+            if(index > 60 ) {
+                logger.error("Future Transactions");
+                throw new UnParsableTransactionException();
             }
             Statistics trans = store[index];
             double amt = transaction.getAmount();
             if (trans == null) {
-                trans = new Statistics(amt, 0, amt, amt, 1);
+                trans = new Statistics(amt, amt, amt, amt, 1);
             } else {
                 add(amt, trans);
             }
@@ -70,6 +77,15 @@ public class TransactionProcessor {
         }
     }
 
+    /**
+     *  Clears the whole store.
+     */
+    public void clear() {
+        synchronized (MUTEX) {
+            Arrays.fill(store, null);
+        }
+    }
+
     private int calculateIndex(long starTime) {
         return (int) (starTime - firstIndexSeconds.get());
     }
@@ -77,14 +93,10 @@ public class TransactionProcessor {
     private void add(double amount, Statistics stats) {
         stats.setCount(stats.getCount() + 1);
         stats.setSum(stats.getSum() + amount);
+        stats.setAvg(stats.getSum() / stats.getCount());
         stats.setMax(Double.max(stats.getMax(), amount));
         stats.setMin(Double.min(stats.getMin(), amount));
-    }
 
-    public void clear() {
-        synchronized (MUTEX) {
-            Arrays.fill(store, null);
-        }
     }
 
     private void shuffleArray() {

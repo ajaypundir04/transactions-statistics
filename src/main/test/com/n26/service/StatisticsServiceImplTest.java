@@ -23,7 +23,7 @@ public class StatisticsServiceImplTest {
 
 
     @Test
-    public void registerTest() {
+    public void testRegister() {
         ArgumentCaptor<Transaction> valueCapture = ArgumentCaptor.forClass(Transaction.class);
         Mockito.doNothing().when(transactionProcessor).addTransaction(valueCapture.capture());
         Transaction transaction = TestUtil.transaction(LocalDateTime.now());
@@ -33,8 +33,8 @@ public class StatisticsServiceImplTest {
     }
 
     @Test
-    public void getStatisticsTest() {
-        Statistics [] store = TestUtil.store();
+    public void testGetStatistics() {
+        Statistics[] store = TestUtil.store();
         Mockito.when(transactionProcessor.getStore()).thenReturn(store);
         Statistics statistics = statisticsService.getStatistics();
         Mockito.verify(transactionProcessor, Mockito.times(1)).getStore();

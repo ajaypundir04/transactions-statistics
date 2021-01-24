@@ -161,6 +161,14 @@
             <version>2.0.4</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.code.bean-matchers/bean-matchers -->
+        <dependency>
+            <groupId>com.google.code.bean-matchers</groupId>
+            <artifactId>bean-matchers</artifactId>
+            <version>0.13</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

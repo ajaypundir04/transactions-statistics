@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 /**
  * @author Ajay Singh Pundir
  * It will be used to calculate the stats within last 60 seconds.
@@ -74,7 +76,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         if (count > 0) {
             avg = sum / count;
         }
-        return new Statistics(sum, avg, max, min, count);
+        Statistics statistics = new Statistics(sum, avg, max, min, count);
+        logger.info("Statistics {} Now {}", statistics.toString(), Instant.now());
+        return statistics;
     }
 
     /**

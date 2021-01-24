@@ -14,14 +14,14 @@ import java.io.IOException;
 public class StatisticsSerializer extends JsonSerializer<Statistics> {
 
     @Override
-    public void serialize(Statistics statistics, JsonGenerator jgen, SerializerProvider serializerProvider) throws IOException {
-        jgen.writeStartObject();
-        jgen.writeStringField("sum", doubleToString(statistics.getSum()));
-        jgen.writeStringField("avg", doubleToString(statistics.getAvg()));
-        jgen.writeStringField("min", doubleToString(statistics.getMin()));
-        jgen.writeStringField("max", doubleToString(statistics.getMax()));
-        jgen.writeNumberField("count", statistics.getCount());
-        jgen.writeEndObject();
+    public void serialize(Statistics statistics, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeStringField("sum", doubleToString(statistics.getSum()));
+        jsonGenerator.writeStringField("avg", doubleToString(statistics.getAvg()));
+        jsonGenerator.writeStringField("min", doubleToString(statistics.getMin()));
+        jsonGenerator.writeStringField("max", doubleToString(statistics.getMax()));
+        jsonGenerator.writeNumberField("count", statistics.getCount());
+        jsonGenerator.writeEndObject();
     }
 
     private String doubleToString(double number) {

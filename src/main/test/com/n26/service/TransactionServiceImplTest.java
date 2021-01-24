@@ -27,28 +27,28 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    public void createTest() throws UnParsableTransactionException, OlderTransactionException {
+    public void testCreate() throws UnParsableTransactionException, OlderTransactionException {
         Mockito.doNothing().when(statisticsService).register(Mockito.any(Transaction.class));
         transactionService.create(TestUtil.transaction(LocalDateTime.now()));
         Mockito.verify(statisticsService, Mockito.times(1)).register(Mockito.any(Transaction.class));
     }
 
     @Test(expected = UnParsableTransactionException.class)
-    public void createThrowsUnParsableTransactionExceptionTest() throws UnParsableTransactionException, OlderTransactionException {
+    public void testCreateThrowsUnParsableTransactionException() throws UnParsableTransactionException, OlderTransactionException {
         Mockito.doNothing().when(statisticsService).register(Mockito.any(Transaction.class));
         transactionService.create(TestUtil.transaction(LocalDateTime.now().plusMinutes(2)));
         Mockito.verify(statisticsService, Mockito.times(0)).register(Mockito.any(Transaction.class));
     }
 
     @Test(expected = OlderTransactionException.class)
-    public void createThrowsOlderTransactionExceptionExceptionTest() throws UnParsableTransactionException, OlderTransactionException {
+    public void testCreateThrowsOlderTransactionExceptionException() throws UnParsableTransactionException, OlderTransactionException {
         Mockito.doNothing().when(statisticsService).register(Mockito.any(Transaction.class));
         transactionService.create(TestUtil.transaction(LocalDateTime.now().minusMinutes(2)));
         Mockito.verify(statisticsService, Mockito.times(0)).register(Mockito.any(Transaction.class));
     }
 
     @Test
-    public void deleteTest() throws UnParsableTransactionException, OlderTransactionException {
+    public void testDelete() throws UnParsableTransactionException, OlderTransactionException {
         Mockito.doNothing().when(statisticsService).clearStatistics();
         transactionService.delete();
         Mockito.verify(statisticsService, Mockito.times(1)).clearStatistics();
