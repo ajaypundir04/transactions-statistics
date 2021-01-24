@@ -4,83 +4,75 @@ import com.n26.model.Statistics;
 import com.n26.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    LinkedList[] store = new LinkedList[60];
+    private final TransactionManager transactionManager;
 
-    @PostConstruct
-    private void postConstruct() {
-        initialize();
+    @Autowired
+    public StatisticsServiceImpl(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
     }
 
-    private void initialize() {
-        store = new LinkedList[60];
-    }
     // Stats will be added to store for considering calculation purpose
     public void register(Transaction tx) {
         addTransactionToStore(tx);
     }
 
-    // Add Algorithm here  for stats calcultaion
+    // Add Algorithm here  for stats calculation
     protected Statistics getStatistics(long now) {
         return null;
     }
 
     public Statistics getStatistics() {
-        return getStatistics(Instant.now().toEpochMilli());
+
+        Statistics[] store = transactionManager.getStore();
+
+        double max = 0;
+        double min = 0;
+        double sum = 0.0;
+        long count = 0;
+        double avg = 0;
+
+        boolean started = false;
+
+        for (int i = 0; i < 60; i++) {
+            if (store[i] != null) {
+
+                count += store[i].getCount();
+
+                sum += store[i].getSum();
+
+                if (started) {
+                    if (max < store[i].getMax()) {
+                        max = store[i].getMax();
+                    }
+
+                    if (min > store[i].getMin()) {
+                        min = store[i].getMin();
+                    }
+                } else {
+                    started = true;
+                    max = store[i].getMax();
+                    min = store[i].getMin();
+                }
+            }
+        }
+        if (count > 0) {
+            avg = sum / count;
+        }
+        return new Statistics(sum, avg, max, min, count);
     }
 
-    public synchronized void clearStatistics() {
-        initialize();
+    public void clearStatistics() {
+        transactionManager.clear();
     }
 
     private void addTransactionToStore(Transaction t) {
-        long lastElementEpoc = -1;
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        long currentTimeEpoc = toEpocTime(currentTime);
-        long startIndexEpoc = toEpocTime(currentTime.minusSeconds(60));
-
-        if (startIndexEpoc > lastElementEpoc && lastElementEpoc > -1) {
-            Arrays.fill(store, null);
-        } else {
-            int shift = getIndexFromEpoc(lastElementEpoc) - getIndexFromEpoc(startIndexEpoc);
-            arrayLeftShift(store, shift, getIndexFromEpoc(lastElementEpoc));
-        }
-
-        lastElementEpoc = t.getTimestamp();
-        int index = getIndexFromEpoc(lastElementEpoc);
-        LinkedList<Transaction> trans = store[index];
-        if (trans == null) {
-            trans = new LinkedList<>();
-        }
-
-        trans.add(t);
-        store[index] = trans;
-    }
-
-    private void arrayLeftShift(LinkedList[] store, int count, int total) {
-        for (int i = count; i <= total; i++) {
-            store[i - count] = store[i];
-        }
-    }
-
-    private long toEpocTime(LocalDateTime time) {
-        return time.atZone(ZoneId.systemDefault()).toEpochSecond();
-    }
-
-    private int getIndexFromEpoc(long time) {
-        return (int) (time % 60);
+        transactionManager.addTransaction(t);
     }
 }
