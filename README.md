@@ -23,7 +23,7 @@ seconds.
 #### Approach
 We are having the in-memory array of Statistics[60] known as `store`. It will consist of data of statistics within last 60 seconds.
 - As we are using array, the traversal will be O(1).
-- While adding the transaction, we use the timestamp to determine the index in the array.It will be O(1) as we are dealing with fixed size array elements  
+- While adding the transaction, we use the timestamp to determine the index in the array.It will be O(1) as we are dealing with fixed size array elements.
 - Calculation of Statistics is O(1) as well, because we are iterating over fixed size array
 
 #### Steps to Run
@@ -31,8 +31,8 @@ We are having the in-memory array of Statistics[60] known as `store`. It will co
     - `mvn clean install`  for build
     - `mvn clean integration-test` for integration-test
     - `mvn clean test` for unit test case
-- MySQL should be up and running
-    - `docker-compose-up -d` can be used if docker available, otherwise use MySQL application for database
+- Run Steps
+   - `mvn spring-boot:run` for running the application
 - Entry Point
     - `com.n26.Application` is the entry point of the application
     - Swagger Endpoint `http://localhost:8080/swagger-ui.html`
